@@ -1,4 +1,4 @@
-public class Position {
+public class Position{
 	// - x : int
 	// - y : int
 	
@@ -10,4 +10,10 @@ public class Position {
 	
 	// Post: returns y.
 	// + getY() : int
+	
+	// Post: returns hashcode for position object
+	// + hashCode() : int
+	
+	// Post: Compares the specified object with this map for equality.
+	// + equals() : boolean
 }

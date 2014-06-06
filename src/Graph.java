@@ -1,5 +1,5 @@
 public class Graph {
-	// positions : Map<Node>
+	// - positions : HashMap<Position, Node>
 	
 	// Post: has created an empty graph.
 	// + Graph()
