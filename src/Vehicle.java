@@ -14,5 +14,5 @@ public class Vehicle {
 	// + getName() : String
 	
 	// Post:  returns speed.
-	// + getSpeed() :int
+	// + getSpeed() : int
 }

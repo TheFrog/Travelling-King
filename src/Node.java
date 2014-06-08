@@ -12,6 +12,9 @@ public class Node {
 	// Post: returns name.
 	// + getName() : String
 	
+	// Post: returns the edges.
+	// + listEdges() : List<Edge>
+	
 	// Pre: e != null.
 	// Post: has removed edge e.
 	// + removeEdge(e : Edge)
