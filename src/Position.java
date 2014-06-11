@@ -1,13 +1,9 @@
 public class Position {
-	// - vehicle : Vehicle
 	// - x : int
 	// - y : int
 	
 	// Post: has created a Position with coordinates (a, b).
 	// + Position(a : int, b : int)
-	
-	// Post: returns vehicle.
-	// + getVehicle() : Vehicle
 	
 	// Post: returns x.
 	// + getX() : int

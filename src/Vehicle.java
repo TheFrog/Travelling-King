@@ -15,4 +15,10 @@ public class Vehicle {
 	
 	// Post:  returns speed.
 	// + getSpeed() : int
+	
+	// Post: returns the hash code for the Vehicle object.
+	// + hashCode() : int
+	
+	// Post: return whether the other Object is equal to this Vehicle.
+	// + equals(other : Object) : boolean
 }
