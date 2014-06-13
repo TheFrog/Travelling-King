@@ -1,3 +1,4 @@
+// Represents a graph
 public class Graph {
 	// Post: has created an empty graph.
 	// + Graph()
