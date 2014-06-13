@@ -1,6 +1,13 @@
+// Represents a vehicle
 public class Vehicle {
+	
+	// Cost of travelling in this vehicle
 	// - cost : int
+	
+	// Name of vehicle
 	// - name : String
+	
+	// Speed of travelling in this vehicle
 	// - speed : int
 	
 	// Pre: c > 0 and s > 0.
