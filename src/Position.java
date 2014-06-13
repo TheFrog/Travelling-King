@@ -1,4 +1,4 @@
-// Represents the position of a ... 
+// Represents an position
 public class Position {
 	
 	// X coordinate
