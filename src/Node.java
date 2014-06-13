@@ -1,4 +1,6 @@
+// Represents a node in the graph, at the end of an edge. 
 public class Node {
+	// Stores adjecent edges
 	// - edges : List<Edge>
 	
 	// Post: has created a Node.
