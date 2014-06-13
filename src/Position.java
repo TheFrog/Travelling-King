@@ -1,10 +1,10 @@
-// Represents an position
+// Represents a Position.
 public class Position {
 	
-	// X coordinate
+	// X coordinate.
 	// - x : int
 	
-	// Y coordinate
+	// Y coordinate.
 	// - y : int
 	
 	// Post: has created a Position with coordinates (a, b).

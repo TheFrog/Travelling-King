@@ -1,6 +1,6 @@
-// Represents a node in the graph
+// Represents a Node in the Graph.
 public class Node {
-	// Stores adjecent edges
+	// Stores connecting Edges.
 	// - edges : List<Edge>
 	
 	// Post: has created a Node.

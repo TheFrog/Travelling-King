@@ -1,4 +1,4 @@
-// Represents a graph
+// Represents a Graph with Nodes connected by Edges.
 public class Graph {
 	// Post: has created an empty graph.
 	// + Graph()

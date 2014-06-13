@@ -1,13 +1,12 @@
-// Represents a vehicle
+// Represents a Vehicle.
 public class Vehicle {
-	
-	// Cost of travelling in this vehicle
+	// Cost of entering the Vehicle.
 	// - cost : int
 	
-	// Name of vehicle
+	// Name of the Vehicle.
 	// - name : String
 	
-	// Speed of travelling in this vehicle
+	// Speed of the Vehicle.
 	// - speed : int
 	
 	// Pre: c > 0 and s > 0.

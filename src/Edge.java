@@ -1,10 +1,9 @@
-// This class represents an edge in the graph
+// This class represents an Edge in the Graph.
 public class Edge {
-	
-	// The lengh of the edge
+	// The length of the Edge.
 	// - length : float
 	
-	// The node at the end
+	// The node at the end of the Edge.
 	// - target : Node
 	
 	// Pre: l >= 0 and t != null.
