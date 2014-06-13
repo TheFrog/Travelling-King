@@ -1,7 +1,16 @@
+// Represents a certain territory with a graph
 public class Territory {
+	
+	// Stores the graph
 	// - graph : Graph
+	
+	// Hashmap for hashmaps of vehicles/nodes with position object as key
 	// - nodes : HashMap<Position, HashMap<Vehicle, Node>>
+	
+	// Hashmap for extra descriptions at positions
 	// - positions : HashMap<String, Position>
+	
+	// Stores all vehicles
 	// - vehicle : List<Vehicle>
 	
 	// Pre: start != null, end != null, length >= 0.
