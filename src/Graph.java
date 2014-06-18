@@ -1,6 +1,6 @@
 // Represents a Graph with Nodes connected by Edges.
 public class Graph {
-	// Post: has created an empty graph.
+	// Post: has created an empty Graph.
 	// + Graph()
 	public Graph() {
 		
