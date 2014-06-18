@@ -6,13 +6,13 @@ public class Territory {
 	// - graph : Graph
 	private Graph graph;
 	
-	// HashMap that stores another HashMap for every Position. This second HashMap contains Nodes for some Vehicles.
-	// - nodes : HashMap<Position, HashMap<Vehicle, Node>>
-	private HashMap<Position, HashMap<Vehicle, Node>> nodes;
+	// Map that stores another Map for every Position. This second Map contains Nodes for some Vehicles.
+	// - nodes : Map<Position, Map<Vehicle, Node>>
+	private Map<Position, Map<Vehicle, Node>> nodes;
 	
 	// HashMap that stores keys and the corresponding Positions.
-	// - positions : HashMap<String, Position>
-	private HashMap<String, Position> positions;
+	// - positions : Map<String, Position>
+	private Map<String, Position> positions;
 	
 	// Stores the Vehicles.
 	// - vehicles : List<Vehicle>
@@ -21,7 +21,7 @@ public class Territory {
 	// Post: has created an empty Territory.
 	public Territory() {
 		graph = new Graph();
-		nodes = new HashMap<Position, HashMap<Vehicle, Node>>();
+		nodes = new HashMap<Position, Map<Vehicle, Node>>();
 		positions = new HashMap<String, Position>();
 		vehicles = new ArrayList<Vehicle>();
 	}
