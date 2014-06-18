@@ -11,20 +11,20 @@ public class Edge {
 	// Pre: l >= 0 and t != null.
 	// Post: has created an Edge with length l and target t.
 	// + Edge(l : float, t : Node)
-	public Edge(float l, Node t){
+	public Edge(float l, Node t) {
 		length = l;
 		target = t;
 	}
 
 	// Post: return length.
 	// + getLength() : float
-	public float getLength(){
-		return this.length;
+	public float getLength() {
+		return length;
 	}
 	
 	// Post: returns target.
 	// + getTarget() : Node
-	public Node getTarget(){
+	public Node getTarget() {
 		return target;
 	}
 }

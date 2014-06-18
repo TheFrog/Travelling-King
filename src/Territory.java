@@ -29,17 +29,17 @@ public class Territory {
 	// Pre: start != null, end != null, length >= 0.
 	// Post: has added a path from Position start to Position finish with the specified length for the Vehicles in the list. If vehicles == null, then all Vehicles are used. Nodes have been created if non-existent. Throws an IllegalArgumentException if the pre-conditions are not met.
 	// - addPath(start : Position, end : Position, length : float, vehicles : List<Vehicle>)
-	public void addPath(Position start, Position end, float length, List<Vehicle> v) throws IllegalArgumentException {
+	public void addPath(Position start, Position end, float length, List<Vehicle> list) throws IllegalArgumentException {
 		if (start == null || end == null || length < 0) {
 			throw new IllegalArgumentException();
 		}
 		
 		// Get the nodes.
-		Map<Vehicle, Node> startNodes = getNodes(start, v);
-		Map<Vehicle, Node> endNodes = getNodes(end, v);
+		Map<Vehicle, Node> startNodes = getNodes(start, list);
+		Map<Vehicle, Node> endNodes = getNodes(end, list);
 		
 		// Add the edge for each vehicle.
-		for (Vehicle vehicle : v) {
+		for (Vehicle vehicle : list) {
 			float l = length / vehicle.getSpeed();
 			graph.addEdge(startNodes.get(vehicle), endNodes.get(vehicle), l);
 		}
