@@ -176,5 +176,33 @@ public class Territory {
 		Position b = new Position(5, 2);
 		Position c = new Position(3, 3);
 		Position d = new Position(3, 4);
+		
+		territory.addPath(a, b, 10, bicycle);
+		territory.addPath(a, c, 20, bicycle);
+		territory.addPath(c, a, 20, bicycle);
+		territory.addPath(c, b, 30, bicycle);
+		territory.addPath(b, c, 30, bicycle);
+		
+		territory.addPath(a, c, 80, car);
+		territory.addPath(c, d, 10, car);
+		territory.addPath(d, c, 50, car);
+		
+		territory.addPath(a, c, 5, walker);
+		territory.addPath(c, a, 5, walker);
+		territory.addPath(a, b, 20, walker);
+		territory.addPath(b, a, 20, walker);
+		territory.addPath(b, c, 20, walker);
+		territory.addPath(c, b, 25, walker);
+		territory.addPath(d, c, 10, walker);
+		territory.addPath(c, d, 10, walker);
+		territory.addPath(d, b, 10, walker);
+		territory.addPath(b, d, 20, walker);
+		
+		try {
+			float path = territory.shortestPath(a, d);
+			System.out.println(path);
+		} catch (PositionsNotConnectedException exception) {
+			System.out.println("Nodes not connected!");
+		}
 	}
 }

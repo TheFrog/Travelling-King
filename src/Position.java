@@ -2,28 +2,28 @@
 public class Position {	
 	// X coordinate.
 	// - x : int
-	private int x;
+	private float x;
 	
 	// Y coordinate.
 	// - y : int
-	private int y;
+	private float y;
 	
 	// Post: has created a Position with coordinates (a, b).
 	// + Position(a : int, b : int)
-	public Position(int a, int b) {
+	public Position(float a, float b) {
 		x = a;
 		y = b;
 	}
 	
 	// Post: returns x.
 	// + getX() : int
-	public int getX() {
+	public float getX() {
 		return x;
 	}
 	
 	// Post: returns y.
 	// + getY() : int
-	public int getY() {
+	public float getY() {
 		return y;
 	}
 	
@@ -34,8 +34,8 @@ public class Position {
 		final int prime = 31;
 		
 		int result = 1;
-		result = prime * result + x;
-		result = prime * result + y;
+		result = prime * result + Float.floatToIntBits(x);
+		result = prime * result + Float.floatToIntBits(y);
 		
 		return result;
 	}
