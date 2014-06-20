@@ -5,7 +5,6 @@ public class Graph {
 	// Post: has created an empty Graph.
 	// + Graph()
 	public Graph() {
-		
 	}
 	
 	// Pre: source != null and target != null.
@@ -31,7 +30,7 @@ public class Graph {
 	// Pre: source != null and target != null.
 	// Post: returns the shortest path from source to target, and throws a NodesNotConnectedException if no path is found (so the Nodes are not connected).Throws an IllegalArgumentException if the pre-conditions are not met. 
 	// + shortestPath(source : Node, target : Node) : float
-	public float shortestPath(Node source, Node target) throws IllegalArgumentException, NodesNotConnectedException {
+	public float shortestPath(Node source, Node target) throws IllegalArgumentException {
 		if (source == null || target == null) {
 			throw new IllegalArgumentException();
 		}
@@ -73,8 +72,41 @@ public class Graph {
 		
 		// Throw a NodesNotConnectedException if Node target was not reached.
 		if (distances.get(target) == null) {
-			throw new NodesNotConnectedException();
+			//throw new NodesNotConnectedException();
+			return 0;
 		}
 		return distances.get(target);
 	}
+	
+	 public static void main(String args[]){
+		 Graph g = new Graph();
+		 
+		 Node a = g.addNode();
+		 Node b = g.addNode();
+		 Node c = g.addNode();
+		 Node d = g.addNode();
+		 Node e = g.addNode();
+		 Node f = g.addNode();
+		 Node h = g.addNode();
+		 Node i = g.addNode();
+		 
+		 g.addEdge(a, b, 20);
+		 g.addEdge(a, d, 100);
+		 g.addEdge(a, c, 80);
+		 g.addEdge(b, f, 30);
+		 g.addEdge(e, b, 10);
+		 g.addEdge(f, e, 40);
+		 g.addEdge(h, f, 10);
+		 g.addEdge(f, c, 80);
+		 g.addEdge(c, f, 70);
+		 g.addEdge(c, h, 10);
+		 g.addEdge(h, d, 100);
+		 g.addEdge(d, h, 60);
+		 g.addEdge(f, i, 10);
+		 g.addEdge(h, i, 20);
+		 
+		 float path = g.shortestPath(a, i);
+		 System.out.println(path);
+		 
+	 }
 }
