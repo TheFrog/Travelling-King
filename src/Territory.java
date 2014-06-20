@@ -168,6 +168,7 @@ public class Territory {
 	// Tests.
 	public static void main(String args[]) {
 		Territory territory = new Territory();
+		
 		Vehicle bicycle =	new Vehicle(5,	"Bicycle",	10);	territory.addVehicle(bicycle);
 		Vehicle car =		new Vehicle(20,	"Car",		40);	territory.addVehicle(car);
 		Vehicle walker = 	new Vehicle(0,	"Walker",	5);		territory.addVehicle(walker);
@@ -198,8 +199,10 @@ public class Territory {
 		territory.addPath(d, b, 10, walker);
 		territory.addPath(b, d, 20, walker);
 		
+		
+		
 		try {
-			float path = territory.shortestPath(a, d);
+			float path = territory.shortestPath(a , d);
 			System.out.println(path);
 		} catch (PositionsNotConnectedException exception) {
 			System.out.println("Nodes not connected!");

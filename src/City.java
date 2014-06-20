@@ -15,7 +15,7 @@ public class City extends Territory {
 		
 		BufferedReader br = null;
 		String line = "";
-		String splitBy = ",";
+		String splitBy = ";";
 		
 		try{
 			br = new BufferedReader(new FileReader(file));
@@ -53,5 +53,22 @@ public class City extends Territory {
 			}
 		}
 		
+	}
+	
+	public static void main(String[] args) {
+		City Delft = new City();
+		
+		Vehicle car = new Vehicle(5, "Car", 30);
+		Delft.load(car, "C:\\Users\\Friso Kingma\\Documents\\GitHub\\Travelling-King\\src\\routes\\car.csv");
+		
+		Position a = new Position(new Float(5.0), new Float(5.0));
+		Position b = new Position(new Float(1.0), new Float(1.0));
+		
+		try {
+			float path = Delft.shortestPath(a , b);
+			System.out.println(path);
+		} catch (PositionsNotConnectedException exception) {
+			System.out.println("Nodes not connected!");
+		}
 	}
 }
