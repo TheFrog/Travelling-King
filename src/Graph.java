@@ -30,23 +30,33 @@ public class Graph {
 	// Pre: source != null and target != null.
 	// Post: returns the shortest path from source to target, and throws a NodesNotConnectedException if no path is found (so the Nodes are not connected).Throws an IllegalArgumentException if the pre-conditions are not met. 
 	// + shortestPath(source : Node, target : Node) : float
-	public float shortestPath(Node source, Node target) throws IllegalArgumentException {
+	public float shortestPath(Node source, Node target) throws IllegalArgumentException, NodesNotConnectedException {
 		if (source == null || target == null) {
 			throw new IllegalArgumentException();
 		}
 		
 		// Store Nodes that have to be visited.
-		Queue<Node> queue = new PriorityQueue<Node>();
+		Set<Node> items = new HashSet<Node>();
 		
 		// Store distance from the source for every Node.
 		Map<Node, Float> distances = new HashMap<Node, Float>();
 		
 		// Add the source Node.
 		distances.put(source, new Float(0));
-		queue.add(source);
+		items.add(source);
 		
-		while (!queue.isEmpty()) {
-			Node n = queue.poll();
+		while (!items.isEmpty()) {
+			// Get the Node with the smallest distance.
+			Node n = null;
+			float x = Float.POSITIVE_INFINITY;
+			for (Node y : items) {
+				if (distances.get(y) < x) {
+					x = distances.get(y);
+					n = y;
+				}
+			}
+			
+			items.remove(n);
 			List<Edge> edges = n.listEdges();
 			
 			for (Edge e : edges) {
@@ -63,17 +73,16 @@ public class Graph {
 				
 				// Update the distances.
 				if (distanceThroughN < d) {
-					queue.remove(t);
+					items.remove(t);
 					distances.put(t, distanceThroughN);
-					queue.add(t);
+					items.add(t);
 				}
 			}
 		}
 		
 		// Throw a NodesNotConnectedException if Node target was not reached.
 		if (distances.get(target) == null) {
-			//throw new NodesNotConnectedException();
-			return 0;
+			throw new NodesNotConnectedException();
 		}
 		return distances.get(target);
 	}
@@ -95,7 +104,7 @@ public class Graph {
 		 g.addEdge(a, c, 80);
 		 g.addEdge(b, f, 30);
 		 g.addEdge(e, b, 10);
-		 g.addEdge(f, e, 40);
+		 g.addEdge(e, f, 40);
 		 g.addEdge(h, f, 10);
 		 g.addEdge(f, c, 80);
 		 g.addEdge(c, f, 70);
@@ -105,8 +114,12 @@ public class Graph {
 		 g.addEdge(f, i, 10);
 		 g.addEdge(h, i, 20);
 		 
-		 float path = g.shortestPath(a, i);
-		 System.out.println(path);
+		 try {
+			 float path = g.shortestPath(a, f);
+			 System.out.println(path);
+		 } catch (NodesNotConnectedException exception) {
+			 System.out.println("Nodes not connected!");
+		 }
 		 
 	 }
 }
