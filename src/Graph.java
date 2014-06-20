@@ -27,12 +27,12 @@ public class Graph {
 	}
 	
 	// Pre: source != null and target != null.
-	// Post: returns the shortest path from source to target, and throws a NodesNotConnectedException if no path is found (so the Nodes are not connected).
+	// Post: returns the shortest path from source to target, and throws a NodesNotConnectedException if no path is found (so the Nodes are not connected). 
 	// + shortestPath(source : Node, target : Node) : float
 	public float shortestPath(Node source, Node target) {
 		if(source == null || target == null){
-			return null;
+			throw new IllegalArgumentException();
 		}
-		//DIJKSTRA
+		
 	}
 }
