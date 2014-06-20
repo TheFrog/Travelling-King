@@ -87,39 +87,39 @@ public class Graph {
 		return distances.get(target);
 	}
 	
-	 public static void main(String args[]){
-		 Graph g = new Graph();
-		 
-		 Node a = g.addNode();
-		 Node b = g.addNode();
-		 Node c = g.addNode();
-		 Node d = g.addNode();
-		 Node e = g.addNode();
-		 Node f = g.addNode();
-		 Node h = g.addNode();
-		 Node i = g.addNode();
-		 
-		 g.addEdge(a, b, 20);
-		 g.addEdge(a, d, 100);
-		 g.addEdge(a, c, 80);
-		 g.addEdge(b, f, 30);
-		 g.addEdge(e, b, 10);
-		 g.addEdge(e, f, 40);
-		 g.addEdge(h, f, 10);
-		 g.addEdge(f, c, 80);
-		 g.addEdge(c, f, 70);
-		 g.addEdge(c, h, 10);
-		 g.addEdge(h, d, 100);
-		 g.addEdge(d, h, 60);
-		 g.addEdge(f, i, 10);
-		 g.addEdge(h, i, 20);
-		 
-		 try {
-			 float path = g.shortestPath(a, f);
-			 System.out.println(path);
-		 } catch (NodesNotConnectedException exception) {
-			 System.out.println("Nodes not connected!");
-		 }
-		 
-	 }
+	// Tests.
+	public static void main(String args[]) {
+		Graph g = new Graph();
+		
+		Node a = g.addNode();
+		Node b = g.addNode();
+		Node c = g.addNode();
+		Node d = g.addNode();
+		Node e = g.addNode();
+		Node f = g.addNode();
+		Node h = g.addNode();
+		Node i = g.addNode();
+		
+		g.addEdge(a, b, 20);
+		g.addEdge(a, d, 100);
+		g.addEdge(a, c, 80);
+		g.addEdge(b, f, 30);
+		g.addEdge(e, b, 10);
+		g.addEdge(e, f, 40);
+		g.addEdge(h, f, 10);
+		g.addEdge(f, c, 80);
+		g.addEdge(c, f, 70);
+		g.addEdge(c, h, 10);
+		g.addEdge(h, d, 100);
+		g.addEdge(d, h, 60);
+		g.addEdge(f, i, 10);
+		g.addEdge(h, i, 20);
+		
+		try {
+			float path = g.shortestPath(a, f);
+			System.out.println(path);
+		} catch (NodesNotConnectedException exception) {
+			System.out.println("Nodes not connected!");
+		}
+	}
 }

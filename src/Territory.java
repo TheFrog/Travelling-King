@@ -28,7 +28,7 @@ public class Territory {
 	
 	// Pre: start != null, end != null, length >= 0.
 	// Post: has added a path from Position start to Position finish with the specified length for the Vehicles in the list. If vehicles == null, then all Vehicles are used. Nodes have been created if non-existent. Throws an IllegalArgumentException if the pre-conditions are not met.
-	// - addPath(start : Position, end : Position, length : float, vehicles : List<Vehicle>)
+	// + addPath(start : Position, end : Position, length : float, vehicles : List<Vehicle>)
 	public void addPath(Position start, Position end, float length, List<Vehicle> list) throws IllegalArgumentException {
 		if (start == null || end == null || length < 0) {
 			throw new IllegalArgumentException();
@@ -47,7 +47,7 @@ public class Territory {
 	
 	// Pre: start != null, end != null, length >= 0.
 	// Post: has added a path from Position start to Position finish with the specified length for the passed Vehicle. Nodes have been created if non-existent. Throws an IllegalArgumentException if the pre-conditions are not met.
-	// - addPath(start: Position, end : Position, length : float, vehicle : Vehicle)
+	// + addPath(start: Position, end : Position, length : float, vehicle : Vehicle)
 	public void addPath(Position start, Position end, float length, Vehicle vehicle) throws IllegalArgumentException {
 		List<Vehicle> v = new ArrayList<Vehicle>();
 		v.add(vehicle);
@@ -57,14 +57,14 @@ public class Territory {
 	
 	// Pre: start != null, end != null, length >= 0.
 	// Post: has added a path from Position start to Position finish with the specified length for all Vehicles. Nodes have been created if non-existent. Throws an IllegalArgumentException if the pre-conditions are not met.
-	// - addPath(start : Position, end : Position, length : float)
+	// + addPath(start : Position, end : Position, length : float)
 	public void addPath(Position start, Position end, float length) throws IllegalArgumentException {
 		addPath(start, end, length, vehicles);
 	}
 	
 	// Pre: key != null.
 	// Post: has returned the Position with the specified key if it exists, otherwise returns null.
-	// positionForKey(key : String) : Position
+	// + positionForKey(key : String) : Position
 	public Position positionForKey(String key) {
 		if (key == null) {
 			return null;
@@ -73,9 +73,16 @@ public class Territory {
 		return positions.get(key);
 	}
 	
+	// Pre: vehicle != null.
+	// Post: has added the Vehicle, throws an IllegalArgumentException if the pre-condition is not met.
+	// + addVehicle(vehicle : Vehicle)
+	public void addVehicle(Vehicle vehicle) {
+		vehicles.add(vehicle);
+	}
+	
 	// Pre: key != null, position != null.
 	// Post: has set String key as the key for Position position, throws a KeyExistsException if the key already exists and throws an IllegalArgumentException if the pre-conditions are not met.
-	// setKey(key : String, position : Position)
+	// + setKey(key : String, position : Position)
 	public void setKey(String key, Position position) throws IllegalArgumentException, KeyExistsException {
 		if (key == null || position == null) {
 			throw new IllegalArgumentException();
@@ -92,7 +99,34 @@ public class Territory {
 	// Post: returns the shortest path from source to target, and throws a PositionsNotConnectedException if no path is found (so the Positions are not connected).
 	// + shortestPath(source : Position, target : Position) : float
 	public float shortestPath(Position source, Position target) throws PositionsNotConnectedException {
-		return 0;
+		// Add a temporary starting Node.
+		Node s = graph.addNode();
+		for (Node x : nodes.get(source).values()) {
+			graph.addEdge(s, x, 0);
+		}
+		
+		// Add the temporary end Node.
+		Map<Node, Edge> edges = new HashMap<Node, Edge>();
+		Node t = graph.addNode();
+		for (Node x : nodes.get(target).values()) {
+			Edge e = graph.addEdge(x, t, 0);
+			edges.put(x, e);
+		}
+		
+		// Find the shortest path.
+		float result;
+		try {
+			result = graph.shortestPath(s, t);
+		} catch (NodesNotConnectedException e) {
+			throw new PositionsNotConnectedException();
+		}
+		
+		// Remove the temporary end Nodes.
+		for (Map.Entry<Node, Edge> entry : edges.entrySet()) {
+		    entry.getKey().removeEdge(entry.getValue());
+		}
+		
+		return result;
 	}
 	
 	// Pre: position != null, list != null;
@@ -119,7 +153,7 @@ public class Territory {
 		// Connect all Nodes.
 		for (Vehicle v : list) {
 			for (Vehicle w : list) {
-				if (v == w) { // Don't connection a vehicle to itself.
+				if (v == w) { // Don't connect a vehicle to itself.
 					continue;
 				}
 				
@@ -129,5 +163,18 @@ public class Territory {
 		}
 		
 		return n;
+	}
+	
+	// Tests.
+	public static void main(String args[]) {
+		Territory territory = new Territory();
+		Vehicle bicycle =	new Vehicle(5,	"Bicycle",	10);	territory.addVehicle(bicycle);
+		Vehicle car =		new Vehicle(20,	"Car",		40);	territory.addVehicle(car);
+		Vehicle walker = 	new Vehicle(0,	"Walker",	5);		territory.addVehicle(walker);
+		
+		Position a = new Position(1, 1);
+		Position b = new Position(5, 2);
+		Position c = new Position(3, 3);
+		Position d = new Position(3, 4);
 	}
 }
