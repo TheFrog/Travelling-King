@@ -6,6 +6,7 @@ import org.xml.sax.helpers.*;
 import java.io.*;
 import java.util.*;
 
+// Read a simple SVG file and export it as CSV files (one per group).
 public class SVGReader extends DefaultHandler {
 	// CSV delimiter.
 	// + delimiter : String
