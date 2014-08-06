@@ -1,3 +1,4 @@
+import java.io.*;
 import java.util.*;
 
 // Represents a certain Territory with a Graph.
@@ -5,6 +6,10 @@ public class Territory {
 	// Stores the Graph.
 	// - graph : Graph
 	private Graph graph;
+	
+	// Stores the last found Route.
+	// - lastRoute : Route
+	private List<Position> lastRoute;
 	
 	// Map that stores another Map for every Position. This second Map contains Nodes for some Vehicles.
 	// - nodes : Map<Position, Map<Vehicle, Node>>
@@ -16,30 +21,30 @@ public class Territory {
 	
 	// Stores the Vehicles.
 	// - vehicles : List<Vehicle>
-	private List<Vehicle> vehicles;
+	private Set<Vehicle> vehicles;
 	
 	// Post: has created an empty Territory.
 	public Territory() {
 		graph = new Graph();
 		nodes = new HashMap<Position, Map<Vehicle, Node>>();
 		positions = new HashMap<String, Position>();
-		vehicles = new ArrayList<Vehicle>();
+		vehicles = new HashSet<Vehicle>();
 	}
 	
 	// Pre: start != null, end != null, length >= 0.
 	// Post: has added a path from Position start to Position finish with the specified length for the Vehicles in the list. If vehicles == null, then all Vehicles are used. Nodes have been created if non-existent. Throws an IllegalArgumentException if the pre-conditions are not met.
 	// + addPath(start : Position, end : Position, length : float, vehicles : List<Vehicle>)
-	public void addPath(Position start, Position end, float length, List<Vehicle> list) throws IllegalArgumentException {
+	public void addPath(Position start, Position end, float length, Set<Vehicle> set) throws IllegalArgumentException {
 		if (start == null || end == null || length < 0) {
 			throw new IllegalArgumentException();
 		}
 		
 		// Get the nodes.
-		Map<Vehicle, Node> startNodes = getNodes(start, list);
-		Map<Vehicle, Node> endNodes = getNodes(end, list);
+		Map<Vehicle, Node> startNodes = getNodes(start, set);
+		Map<Vehicle, Node> endNodes = getNodes(end, set);
 		
 		// Add the edge for each vehicle.
-		for (Vehicle vehicle : list) {
+		for (Vehicle vehicle : set) {
 			float l = length / vehicle.getSpeed();
 			graph.addEdge(startNodes.get(vehicle), endNodes.get(vehicle), l);
 		}
@@ -49,7 +54,7 @@ public class Territory {
 	// Post: has added a path from Position start to Position finish with the specified length for the passed Vehicle. Nodes have been created if non-existent. Throws an IllegalArgumentException if the pre-conditions are not met.
 	// + addPath(start: Position, end : Position, length : float, vehicle : Vehicle)
 	public void addPath(Position start, Position end, float length, Vehicle vehicle) throws IllegalArgumentException {
-		List<Vehicle> v = new ArrayList<Vehicle>();
+		Set<Vehicle> v = new HashSet<Vehicle>();
 		v.add(vehicle);
 		
 		addPath(start, end, length, v);
@@ -96,13 +101,20 @@ public class Territory {
 	}
 	
 	// Pre: source != null and target != null.
-	// Post: returns the shortest path from source to target, and throws a PositionsNotConnectedException if no path is found (so the Positions are not connected).
+	// Post: returns the shortest path from source to target, and throws a PositionsNotConnectedException if no path is found (so the Positions are not connected). Throws an IllegalStateException if a found Route contains a Node with data that is not a Position, and throws an IllegalArgumentException if one of the Positions is not found.
 	// + shortestPath(source : Position, target : Position) : float
-	public float shortestPath(Position source, Position target) throws PositionsNotConnectedException {
+	public float shortestPath(Position source, Position target) throws IllegalArgumentException, IllegalStateException, PositionsNotConnectedException {
+		// Check whether the Positions exist.
+		if (!nodes.containsKey(source) || !nodes.containsKey(target)) {
+			throw new IllegalArgumentException();
+		}
+		
 		// Add a temporary starting Node.
 		Node s = graph.addNode();
-		for (Node x : nodes.get(source).values()) {
-			graph.addEdge(s, x, 0);
+		for (Map.Entry<Vehicle, Node> entry : nodes.get(source).entrySet()) {
+			Vehicle v = entry.getKey();
+			Node n = entry.getValue();
+			graph.addEdge(s, n, v.getCost());
 		}
 		
 		// Add the temporary end Node.
@@ -114,9 +126,9 @@ public class Territory {
 		}
 		
 		// Find the shortest path.
-		float result;
+		Route route;
 		try {
-			result = graph.shortestPath(s, t);
+			route = graph.shortestPath(s, t);
 		} catch (NodesNotConnectedException e) {
 			throw new PositionsNotConnectedException();
 		}
@@ -126,14 +138,77 @@ public class Territory {
 		    entry.getKey().removeEdge(entry.getValue());
 		}
 		
-		return result;
+		// Remove the temporary starting and end Nodes.
+		List<Node> nodes = route.getNodes();
+		nodes.remove(0);
+		nodes.remove(nodes.size() - 1);
+		
+		// Save the route for future use.
+		lastRoute = new ArrayList<Position>();
+		for (Node n : nodes) {
+			if (!(n.getData() instanceof Position)) {
+				throw new IllegalStateException();
+			}
+			
+			// Add the Position to the list. Invert, because the Route starts with the target.
+			Position p = (Position)n.getData();
+			lastRoute.add(0, p);
+		}
+		
+		return route.getDistance();
 	}
 	
-	// Pre: position != null, list != null;
+	// Pre: lastRoute != null.
+	// Post: prints the last found route, and displays a message if the pre-condition is not met. Throws an IllegalStateException if a Node's data attribute is not a Position object.
+	// + printLastRoute()
+	public void printLastRoute() {
+		if (lastRoute == null) {
+			System.out.println("No last route found.");
+		}
+		
+		for (int i = 0; i < lastRoute.size(); i++) {
+			Position p = lastRoute.get(i);
+			System.out.println("(" + p.getX() + ", " + p.getY() + ")");
+			
+			// Display a message when a switch between vehicles has been made.
+			if (i + 1 < lastRoute.size() && p.equals(lastRoute.get(i + 1))) {
+				System.out.println("Switched vehicles!");
+			}
+		}
+		
+		System.out.println("Target reached!");
+	}
+	
+	// Pre: lastRoute != null.
+	// Post: has saved the last found route in SVG format in file. Throws an IllegalStateException if the pre-condition is not met.
+	// + saveLastRoute(file : File)
+	public void saveLastRoute(File file) {
+		StringBuilder builder = new StringBuilder("<svg xmlns=\"http://www.w3.org/2000/svg\" style=\"stroke:rgb(0,0,0); stroke-width:1\" version=\"1.1\">");
+		
+		// Add the remaining lines.
+		for (int i = 0; i < lastRoute.size() - 1; i++) {
+			Position p1 = lastRoute.get(i);
+			Position p2 = lastRoute.get(i + 1);
+			builder.append("<line x1=\"" + p1.getX() + "\" y1=\"" + p1.getY() + "\" x2=\"" + p2.getX() + "\" y2=\"" + p2.getY() + "\" />");
+		}
+			
+		builder.append("</svg>");
+		
+		// Write.
+		try {
+			FileWriter writer = new FileWriter(file);
+			writer.write(builder.toString());
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	// Pre: position != null, list != null.
 	// Post: returns all Nodes at the specified Position for the specified Vehicles. Nodes have been created if needed.
 	// - getNodes(position : Position, list : List<Vehicle>) : Map<Vehicle, Node>
-	private Map<Vehicle, Node> getNodes(Position position, List<Vehicle> list) throws IllegalArgumentException {
-		if (position == null || list == null) {
+	private Map<Vehicle, Node> getNodes(Position position, Set<Vehicle> set) throws IllegalArgumentException {
+		if (position == null || set == null) {
 			throw new IllegalArgumentException();
 		}
 		
@@ -143,69 +218,29 @@ public class Territory {
 		}
 		
 		// Get the Map and add Nodes if necessary (Map is passed by reference, so we can edit it).
-		Map<Vehicle, Node> n = nodes.get(position);
-		for (Vehicle v : list) {
-			if (n.get(v) == null) {
-				n.put(v, new Node());
-			}
-		}
-		
-		// Connect all Nodes.
-		for (Vehicle v : list) {
-			for (Vehicle w : list) {
-				if (v == w) { // Don't connect a vehicle to itself.
-					continue;
-				}
+		Map<Vehicle, Node> map = nodes.get(position);
+		for (Vehicle v : set) {
+			if (map.get(v) == null) {
+				// Create the Node and store the associated Position.
+				Node n = new Node();
+				n.setData(position);
+				map.put(v, n);
 				
-				float length = w.getCost();
-				graph.addEdge(n.get(v), n.get(w), length);
+				// Connect this Node to all other Nodes at this Position.
+				for (Map.Entry<Vehicle, Node> entry : map.entrySet()) {
+					// Don't connect a Node to itself.
+					if (entry.getKey() == v) {
+						continue;
+					}
+					
+					// Connect the Node both ways.
+					graph.addEdge(n, entry.getValue(), entry.getKey().getCost());
+					graph.addEdge(entry.getValue(), n, v.getCost());
+				}
 			}
+			
 		}
 		
-		return n;
-	}
-	
-	// Tests.
-	public static void main(String args[]) {
-		Territory territory = new Territory();
-		
-		Vehicle bicycle =	new Vehicle(5,	"Bicycle",	10);	territory.addVehicle(bicycle);
-		Vehicle car =		new Vehicle(20,	"Car",		40);	territory.addVehicle(car);
-		Vehicle walker = 	new Vehicle(0,	"Walker",	5);		territory.addVehicle(walker);
-		
-		Position a = new Position(1, 1);
-		Position b = new Position(5, 2);
-		Position c = new Position(3, 3);
-		Position d = new Position(3, 4);
-		
-		territory.addPath(a, b, 10, bicycle);
-		territory.addPath(a, c, 20, bicycle);
-		territory.addPath(c, a, 20, bicycle);
-		territory.addPath(c, b, 30, bicycle);
-		territory.addPath(b, c, 30, bicycle);
-		
-		territory.addPath(a, c, 80, car);
-		territory.addPath(c, d, 10, car);
-		territory.addPath(d, c, 50, car);
-		
-		territory.addPath(a, c, 5, walker);
-		territory.addPath(c, a, 5, walker);
-		territory.addPath(a, b, 20, walker);
-		territory.addPath(b, a, 20, walker);
-		territory.addPath(b, c, 20, walker);
-		territory.addPath(c, b, 25, walker);
-		territory.addPath(d, c, 10, walker);
-		territory.addPath(c, d, 10, walker);
-		territory.addPath(d, b, 10, walker);
-		territory.addPath(b, d, 20, walker);
-		
-		
-		
-		try {
-			float path = territory.shortestPath(a , d);
-			System.out.println(path);
-		} catch (PositionsNotConnectedException exception) {
-			System.out.println("Nodes not connected!");
-		}
+		return map;
 	}
 }

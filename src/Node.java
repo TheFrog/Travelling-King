@@ -2,6 +2,10 @@ import java.util.*;
 
 // Represents a Node in the Graph.
 public class Node {
+	// Stores data related to this Node.
+	// - data : Object
+	private Object data;
+	
 	// Stores connecting Edges.
 	// - edges : List<Edge>
 	private List<Edge> edges;
@@ -34,5 +38,17 @@ public class Node {
 		if (e != null){
 			edges.remove(e);
 		}
+	}
+
+	// Post: returns the data.
+	// + getData() : Object
+	public Object getData() {
+		return data;
+	}
+
+	// Post: has set data to d.
+	// + setData(d : Object)
+	public void setData(Object d) {
+		data = d;
 	}
 }

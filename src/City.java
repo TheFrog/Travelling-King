@@ -1,74 +1,104 @@
 import java.io.*;
+import java.util.*;
 
-// Imports Vehicle routes in territory
+// Imports Vehicle routes in Territory.
 public class City extends Territory {
-	
 	public City(){
 		super();
 	}
 	
-	//Loads the vehicle with its corresponding file
-	public void load(Vehicle vehicle, String file){
-		
-		// Load vehicle in territory
+	// Loads the vehicle with its corresponding File.
+	public void load(Vehicle vehicle, File file){
+		// Load the Vehicle in Territory.
 		addVehicle(vehicle);
 		
-		BufferedReader br = null;
+		BufferedReader reader = null;
 		String line = "";
-		String splitBy = ";";
+		String splitBy = ",";
 		
-		try{
-			br = new BufferedReader(new FileReader(file));
-			while((line = br.readLine()) != null) {
+		try {
+			reader = new BufferedReader(new FileReader(file));
+			while ((line = reader.readLine()) != null) {
 				String[] data = line.split(splitBy);
 				
-				float x1 = Float.valueOf(data[0]);
-				float y1 = Float.valueOf(data[1]);
+				float x1 = Float.parseFloat(data[0]);
+				float y1 = Float.parseFloat(data[1]);
 				
-				float x2 = Float.valueOf(data[2]);
-				float y2 = Float.valueOf(data[3]);
+				float x2 = Float.parseFloat(data[2]);
+				float y2 = Float.parseFloat(data[3]);
 				
 				Position a = new Position(x1, y1);
 				Position b = new Position(x2, y2);
 				
-				float length = (float) Math.sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2));
+				float length = (float)Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1-y2, 2));
 				
+				// All roads are bidirectional.
 				addPath(a, b, length, vehicle);
+				addPath(b, a, length, vehicle);
 			}
-		} 
-		catch (FileNotFoundException e) {
+		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-		}
-		catch (IOException e){
+		} catch (IOException e) {
 			e.printStackTrace();
-		}
-		finally {
-			if (br != null){
+		} finally {
+			if (reader != null) {
 				try {
-					br.close();
-				}
-				catch (IOException e){
+					reader.close();
+				} catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
 		}
-		
 	}
 	
 	public static void main(String[] args) {
-		City Delft = new City();
+		if (args.length != 5) {
+			System.out.println("Five arguments are needed: the location of the csv files containing the tram lines, canals, roads and sidewalks (in this order), followed by svg file to save the route in.");
+			return;
+		}
 		
-		Vehicle car = new Vehicle(5, "Car", 30);
-		Delft.load(car, "C:\\Users\\Friso Kingma\\Documents\\GitHub\\Travelling-King\\src\\routes\\car.csv");
+		// Set up the city.
+		City delft = new City();
 		
-		Position a = new Position(new Float(5.0), new Float(5.0));
-		Position b = new Position(new Float(1.0), new Float(1.0));
+		Vehicle tram = new Vehicle(10, "Tram", 15);
+		delft.load(tram, new File(args[0]));
+		
+		Vehicle boat = new Vehicle(15, "Boat", 10);
+		delft.load(boat, new File(args[1]));
+
+		Vehicle carriage = new Vehicle(30, "Carriage", 20);
+		delft.load(carriage, new File(args[2]));
+		
+		Vehicle walking = new Vehicle(0, "Walking", 5);
+		delft.load(walking, new File(args[2]));
+		delft.load(walking, new File(args[3]));
+		
+		// Get the start and target from the user.
+		Scanner scanner = new Scanner(System.in);
+		
+		System.out.println("Enter the starting coordinates (x, y):");
+		float x1 = scanner.nextFloat();
+		float y1 = scanner.nextFloat();
+		
+		System.out.println("Enter the target coordinates (x, y):");
+		float x2 = scanner.nextFloat();
+		float y2 = scanner.nextFloat();
+		
+		Position p1 = new Position(x1, y1);
+		Position p2 = new Position(x2, y2);
 		
 		try {
-			float path = Delft.shortestPath(a , b);
-			System.out.println(path);
-		} catch (PositionsNotConnectedException exception) {
-			System.out.println("Nodes not connected!");
+			float distance = delft.shortestPath(p1, p2);
+			System.out.println("Route found! Distance = " + distance + ".");
+			System.out.println("Route:");
+			delft.printLastRoute();
+			delft.saveLastRoute(new File(args[4]));
+		} catch (IllegalArgumentException e) {
+			System.out.println("One of the entered coordinates does not exist.");
+		} catch (IllegalStateException e) {	
+			e.printStackTrace();
+		} catch (PositionsNotConnectedException e) {
+			System.out.println("No route exists between these points!");
 		}
 	}
 }
