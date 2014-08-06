@@ -57,19 +57,19 @@ public class City extends Territory {
 			return;
 		}
 		
-		// Set up the city.
+		// Set up the city. Costs are in minutes, and vehicle speeds in points per minute. Because with the scale of the map of Delft we use x km/h is equivalent with 5,55x points/minute.
 		City delft = new City();
 		
-		Vehicle tram = new Vehicle(10, "Tram", 15);
+		Vehicle tram = new Vehicle(5, "Tram", 83);
 		delft.load(tram, new File(args[0]));
 		
-		Vehicle boat = new Vehicle(15, "Boat", 10);
+		Vehicle boat = new Vehicle(3, "Boat", 55);
 		delft.load(boat, new File(args[1]));
 
-		Vehicle carriage = new Vehicle(30, "Carriage", 20);
+		Vehicle carriage = new Vehicle(6, "Carriage", 111);
 		delft.load(carriage, new File(args[2]));
 		
-		Vehicle walking = new Vehicle(0, "Walking", 5);
+		Vehicle walking = new Vehicle(0, "Walking", 28);
 		delft.load(walking, new File(args[2]));
 		delft.load(walking, new File(args[3]));
 		
